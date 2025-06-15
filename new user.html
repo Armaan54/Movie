@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New User Preferences - Movie Recommendation System</title>
+  <style>
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-size: 16px;
+      background-color: #121212;
+      color: #e0e0e0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #1f2739 0%, #121212 100%);
+      min-width: 320px;
+      color: #ccc;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* HEADER */
+    header {
+      background: rgba(18, 18, 18, 0.85);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: saturate(120%) blur(12px);
+      padding: 12px 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+    }
+
+    nav a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      padding: 8px 0;
+      transition: color 0.3s ease;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover, nav a:focus {
+      color: #8b5cf6;
+    }
+
+    nav a:hover::after, nav a:focus::after {
+      width: 100%;
+    }
+
+    main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      padding: 60px 24px 80px;
+      user-select: none;
+    }
+
+    .preferences-card {
+      background: rgba(255, 255, 255, 0.07);
+      padding: 48px 40px;
+      border-radius: 20px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 12px 28px rgba(139, 92, 246, 0.35);
+      color: #ddd;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .preferences-card h1 {
+      margin: 0 0 8px 0;
+      font-size: 2.7rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      user-select: text;
+    }
+
+    .preferences-card p {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #bbb;
+      margin: 0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
+      user-select: none;
+    }
+
+    legend {
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: #ccc;
+    }
+
+    label.checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      color: #e0e0e0;
+      user-select: none;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #8b5cf6;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      resize: vertical;
+      min-height: 40px;
+      max-height: 160px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: none;
+      outline-offset: 3px;
+      outline: 2px solid transparent;
+      background-color: #21252b;
+      color: #e0e0e0;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.9);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: outline-color 0.3s ease;
+      user-select: text;
+      margin-top: 6px;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline-color: #8b5cf6;
+      background-color: #292f3d;
+    }
+
+    button[type="submit"] {
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 18px 0;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      box-shadow: 0 14px 32px rgba(139, 92, 246, 0.7);
+      user-select: none;
+    }
+    button[type="submit"]:hover,
+    button[type="submit"]:focus {
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      box-shadow: 0 18px 40px rgba(6, 182, 212, 0.9);
+      outline: none;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #181818;
+      color: #888;
+      padding: 48px 24px 32px;
+      font-size: 0.9rem;
+      text-align: center;
+      user-select: none;
+      border-top: 1px solid #333;
+    }
+    footer a {
+      color: #8b5cf6;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+      margin: 0 12px;
+    }
+    footer a:hover,
+    footer a:focus {
+      color: #06b6d4;
+      outline: none;
+    }
+
+    @media (max-width: 480px) {
+      .preferences-card {
+        padding: 36px 24px;
+      }
+      .preferences-card h1 {
+        font-size: 2rem;
+      }
+      button[type="submit"] {
+        font-size: 1.1rem;
+        padding: 16px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between;">
+      <a href="movie-recommendation-homepage.html" class="logo" tabindex="0" aria-label="Navigate back to homepage">MovieRecSys</a>
+      <nav role="navigation" aria-label="Primary navigation">
+        <a href="movie-recommendation-homepage.html" tabindex="0">Home</a>
+        <a href="movie-recommendation-login.html" tabindex="0">Login</a>
+        <a href="movie-recommendation-register.html" tabindex="0">Register</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section aria-label="New User Movie Preferences Form">
+      <div class="preferences-card" role="form" aria-labelledby="prefsTitle">
+        <h1 id="prefsTitle">Help Us Know Your Taste</h1>
+        <p>Select the types of stories you love, and share your favorite directors and actors.</p>
+        <form id="newUserPreferencesForm" novalidate>
+          <fieldset>
+            <legend>Preferred Movie Story Types</legend>
+            <label class="checkbox-label" for="story-action">
+              <input type="checkbox" id="story-action" name="storyType" value="Action" /> Action
+            </label>
+            <label class="checkbox-label" for="story-comedy">
+              <input type="checkbox" id="story-comedy" name="storyType" value="Comedy" /> Comedy
+            </label>
+            <label class="checkbox-label" for="story-drama">
+              <input type="checkbox" id="story-drama" name="storyType" value="Drama" /> Drama
+            </label>
+            <label class="checkbox-label" for="story-sci-fi">
+              <input type="checkbox" id="story-sci-fi" name="storyType" value="Sci-Fi" /> Sci-Fi
+            </label>
+            <label class="checkbox-label" for="story-romance">
+              <input type="checkbox" id="story-romance" name="storyType" value="Romance" /> Romance
+            </label>
+            <label class="checkbox-label" for="story-horror">
+              <input type="checkbox" id="story-horror" name="storyType" value="Horror" /> Horror
+            </label>
+            <label class="checkbox-label" for="story-thriller">
+              <input type="checkbox" id="story-thriller" name="storyType" value="Thriller" /> Thriller
+            </label>
+            <label class="checkbox-label" for="story-fantasy">
+              <input type="checkbox" id="story-fantasy" name="storyType" value="Fantasy" /> Fantasy
+            </label>
+            <label class="checkbox-label" for="story-documentary">
+              <input type="checkbox" id="story-documentary" name="storyType" value="Documentary" /> Documentary
+            </label>
+          </fieldset>
+
+          <div>
+            <label for="favoriteDirectors">Favorite Directors</label>
+            <input type="text" id="favoriteDirectors" name="favoriteDirectors" placeholder="e.g. Christopher Nolan, Greta Gerwig" autocomplete="off" />
+          </div>
+
+          <div>
+            <label for="favoriteActors">Favorite Actors</label>
+            <input type="text" id="favoriteActors" name="favoriteActors" placeholder="e.g. Leonardo DiCaprio, Viola Davis" autocomplete="off" />
+          </div>
+
+          <button type="submit" aria-label="Submit my movie preferences">Save Preferences</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      &copy; 2024 MovieRecSys. All rights reserved.
+    </div>
+    <div style="margin-top:12px;">
+      <a href="#" aria-label="Privacy Policy">Privacy Policy</a>
+      <a href="#" aria-label="Terms of Service">Terms of Service</a>
+      <a href="#" aria-label="Contact Us">Contact Us</a>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('newUserPreferencesForm');
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const checkedStories = Array.from(form.querySelectorAll('input[name="storyType"]:checked')).map(el => el.value);
+      if (checkedStories.length === 0) {
+        alert('Please select at least one story type you like.');
+        return;
+      }
+
+      const directors = form.favoriteDirectors.value.trim();
+      const actors = form.favoriteActors.value.trim();
+
+      alert(`Your Preferences:\nStories: ${checkedStories.join(', ')}\nDirectors: ${directors || 'None'}\nActors: ${actors || 'None'}`);
+
+      // Here would be the data submission or next steps.
+
+      form.reset();
+    });
+  </script>
+</body>
+</html>
+
